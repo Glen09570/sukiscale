@@ -36,7 +36,7 @@
         "READ_MEDIA_VIDEO",
         "READ_MEDIA_AUDIO"
       ],
-      "package": "com.anonymous.sukiscale"
+      "package": "com.glentong.sukiscale"
     },
     "web": {
       "output": "static",
