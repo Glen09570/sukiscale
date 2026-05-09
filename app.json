@@ -1,13 +1,15 @@
 {
   "expo": {
-    "name": "sukiscale",
-    "slug": "sukiscale",
+    "name": "SukiScale",
+    "slug": "sukiscale-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/icon-1024.png",
     "scheme": "sukiscale",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "owner": "glentong",
+    "description": "SukiScale - A comprehensive agricultural management system for farmers and produce transactions.",
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
