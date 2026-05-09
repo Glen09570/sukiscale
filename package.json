@@ -53,7 +53,6 @@
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
-    "@expo/webpack-config": "^20.0.1",
     "@types/react": "~19.1.0",
     "cross-env": "^10.1.0",
     "eslint": "^9.25.0",
