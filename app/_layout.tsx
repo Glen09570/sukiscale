@@ -97,9 +97,11 @@ export default function RootLayout() {
     <AuthProvider>
       <ToastProvider>
         <AppProvider>
-          <PrinterProvider>
-            <RootLayoutNav />
-          </PrinterProvider>
+          <EnhancedAppProvider>
+            <PrinterProvider>
+              <RootLayoutNav />
+            </PrinterProvider>
+          </EnhancedAppProvider>
         </AppProvider>
       </ToastProvider>
     </AuthProvider>

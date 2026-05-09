@@ -3,7 +3,6 @@ import { DashboardButton } from '@/components/DashboardButton';
 import { ResponsiveLayout } from '@/components/ResponsiveLayout';
 import { TopBar } from '@/components/TopBar';
 import { WebDashboard } from '@/components/WebDashboard';
-import { useApp } from '@/context/AppContext';
 import { useRouter } from 'expo-router';
 import { History, Package, Scale, ShoppingCart, TrendingUp, Users, Wallet } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
@@ -14,8 +13,9 @@ import { Image, Platform, RefreshControl, ScrollView, StyleSheet, Text, View, us
  */
 function MobileDashboard() {
   const router = useRouter();
-  const { transactions, farmers, refreshData } = useApp();
+  const { transactions, farmers, refreshData, networkStatus, syncStatus } = useEnhancedApp();
   const [refreshing, setRefreshing] = useState(false);
+  const [showOfflineDashboard, setShowOfflineDashboard] = useState(false);
 
   const onRefresh = async () => {
     try {
@@ -185,7 +185,33 @@ function MobileDashboard() {
           color="#19F20F"
           onPress={() => router.push('/products' as never)}
         />
+        <DashboardButton
+          title="Offline Status"
+          icon={Settings}
+          color="#6B7280"
+          onPress={() => setShowOfflineDashboard(true)}
+        />
       </View>
+
+      {/* Offline Dashboard Modal */}
+      {showOfflineDashboard && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <OfflineFirstDashboard 
+              onSettingsPress={() => {
+                setShowOfflineDashboard(false);
+                router.push('/settings' as never);
+              }}
+            />
+            <TouchableOpacity 
+              style={styles.closeButton}
+              onPress={() => setShowOfflineDashboard(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -287,6 +313,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 12,
     marginBottom: 0,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    width: '90%',
+    height: '80%',
+    maxWidth: 500,
+    overflow: 'hidden',
+  },
+  closeButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
