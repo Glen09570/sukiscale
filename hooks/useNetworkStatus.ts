@@ -33,7 +33,6 @@ export function useNetworkStatus(): NetworkStatus {
           }));
         } else {
           // React Native implementation
-          const NetInfo = require('@react-native-community/netinfo').default;
           unsubscribe = NetInfo.addEventListener(state => {
             setNetworkStatus({
               isConnected: state.isConnected,
