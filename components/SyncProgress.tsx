@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react-native';
 import { syncQueue, SyncQueueStatus } from '@/services/syncQueue';
+import { CheckCircle, Clock, RefreshCw, XCircle } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface SyncProgressProps {
   visible?: boolean;
@@ -16,6 +16,24 @@ export function SyncProgress({ visible = true, onDismiss }: SyncProgressProps) {
     isProcessing: false,
   });
   const [animValue] = useState(new Animated.Value(0));
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  // Start spinning animation when processing
+  useEffect(() => {
+    if (syncStatus.isProcessing) {
+      const spinAnimation = Animated.loop(
+        Animated.timing(spinValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      );
+      spinAnimation.start();
+      return () => spinAnimation.stop();
+    } else {
+      spinValue.setValue(0);
+    }
+  }, [syncStatus.isProcessing, spinValue]);
 
   useEffect(() => {
     const unsubscribe = syncQueue.subscribe(setSyncStatus);
@@ -143,7 +161,21 @@ export function SyncProgress({ visible = true, onDismiss }: SyncProgressProps) {
 
         {syncStatus.isProcessing && (
           <View style={styles.processingContainer}>
-            <View style={styles.spinner} />
+            <Animated.View 
+              style={[
+                styles.spinner, 
+                { 
+                  transform: [
+                    {
+                      rotate: spinValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0deg', '360deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]} 
+            />
             <Text style={styles.processingText}>Syncing data...</Text>
           </View>
         )}
@@ -294,7 +326,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#e5e7eb',
     borderTopColor: '#3b82f6',
-    animation: 'spin 1s linear infinite',
   },
   processingText: {
     fontSize: 14,
